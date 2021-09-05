@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\search_black.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="model\" />
+    <Folder Include="logger\" />
+    <Folder Include="service\" />
+    <Folder Include="presenter\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\search_black.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
