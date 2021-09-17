@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AppConfig>
+  <Filters>
+    <Genres>
+      <Genre>Ambientală</Genre>
+      <Genre>Clasică</Genre>
+      <Genre>Country</Genre>
+      <Genre>Electronică</Genre>
+      <Genre>Experimentală</Genre>
+      <Genre>Instrumentală</Genre>
+      <Genre>Jazz</Genre>
+      <Genre>Copii</Genre>
+      <Genre>Veche</Genre>
+      <Genre>Pop</Genre>
+      <Genre>Rock</Genre>
+      <Genre>Populară</Genre>
+    </Genres>
+    <Tones>
+      <Tone>Acțiune</Tone>
+      <Tone>Calm</Tone>
+      <Tone>Cool</Tone>
+      <Tone>Crăciun</Tone>
+      <Tone>De prezentare</Tone>
+      <Tone>Dramatic</Tone>
+      <Tone>Fericire</Tone>
+      <Tone>Furie</Tone>
+      <Tone>Înălțător</Tone>
+      <Tone>Înspăimântător</Tone>
+      <Tone>Întunecat</Tone>
+      <Tone>Luptă</Tone>
+      <Tone>Motivant</Tone>
+      <Tone>Nuntă</Tone>
+      <Tone>Optimist</Tone>
+      <Tone>Romantic</Tone>
+      <Tone>Trist</Tone>
+    </Tones>
+    <Paces>
+      <Pace>Lent</Pace>
+      <Pace>Mediu</Pace>
+      <Pace>Rapid</Pace>
+    </Paces>
+    <Voices>
+      <Voice>Nu</Voice>
+      <Voice>Parțial</Voice>
+      <Voice>Preponderent</Voice>
+    </Voices>
+    <Instruments>
+      <Instrument>Bas</Instrument>
+      <Instrument>Chitară</Instrument>
+      <Instrument>Clopoței</Instrument>
+      <Instrument>Orchestră</Instrument>
+      <Instrument>Pian</Instrument>
+      <Instrument>Saxofon</Instrument>
+      <Instrument>Sintetizator</Instrument>
+      <Instrument>Tobe</Instrument>
+      <Instrument>Trompetă</Instrument>
+    </Instruments>
+    <Cultures>
+      <Culture>România</Culture>
+      <Culture>China/Japonia/Coreea</Culture>
+      <Culture>America de Nord</Culture>
+      <Culture>Europa nordină</Culture>
+    </Cultures>
+    <Copyrights>
+      <Copyright>Da</Copyright>
+      <Copyright>Creative Commons</Copyright>
+      <Copyright>YouTube</Copyright>
+      <Copyright>Domeniu public</Copyright>
+    </Copyrights>
+  </Filters>
+</AppConfig>

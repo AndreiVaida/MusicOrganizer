@@ -11,16 +11,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="model\" />
-    <Folder Include="logger\" />
     <Folder Include="service\" />
-    <Folder Include="presenter\" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\search_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="configuration\AppConfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
