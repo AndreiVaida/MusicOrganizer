@@ -2,15 +2,15 @@
 <AppConfig>
   <Filters>
     <Genres>
-      <Genre>Ambientală</Genre>
-      <Genre>Clasică</Genre>
+      <Genre>Ambiental</Genre>
+      <Genre>Clasic</Genre>
       <Genre>Country</Genre>
-      <Genre>Electronică</Genre>
-      <Genre>Experimentală</Genre>
-      <Genre>Instrumentală</Genre>
+      <Genre>Electronic</Genre>
+      <Genre>Experimental</Genre>
+      <Genre>Instrumental</Genre>
       <Genre>Jazz</Genre>
       <Genre>Copii</Genre>
-      <Genre>Veche</Genre>
+      <Genre>Vechi</Genre>
       <Genre>Pop</Genre>
       <Genre>Rock</Genre>
       <Genre>Populară</Genre>

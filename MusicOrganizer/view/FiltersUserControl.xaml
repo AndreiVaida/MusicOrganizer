@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="MusicOrganizer.view.FiltersUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicOrganizer.view"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="450">
+    <Grid>
+        <DockPanel LastChildFill="False">
+            <!--Filters (left)-->
+            <StackPanel DockPanel.Dock = "Left" Width="200">
+                <StackPanel x:Name="GenreFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Gen muzical"/>
+                    <StackPanel Name="Genres"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="ToneFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Ton"/>
+                    <StackPanel Name="Tones"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="PaceFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Ritm"/>
+                    <StackPanel Name="Paces"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="RatingFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Evaluare minimă"/>
+                    <ComboBox Name="Ratings" Width="50" HorizontalAlignment="Left"/>
+                </StackPanel>
+                <StackPanel x:Name="StarredFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <CheckBox Content="Favorit" FontWeight="Bold" Foreground="#FFFF691F"/>
+                </StackPanel>
+            </StackPanel>
+            <!--Filters (right)-->
+            <StackPanel DockPanel.Dock = "Right" Width="250">
+                <StackPanel x:Name="VocalsFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Voce"/>
+                    <StackPanel Name="Vocals"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="InstrumentFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Instrument"/>
+                    <StackPanel Name="Instruments"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="CultureFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Cultură"/>
+                    <StackPanel Name="Cultures"></StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="CopyrightFilterPanel" Style="{StaticResource ResourceKey=Filter}">
+                    <Label Content="Copyright"/>
+                    <StackPanel Name="Copyrights"></StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>
