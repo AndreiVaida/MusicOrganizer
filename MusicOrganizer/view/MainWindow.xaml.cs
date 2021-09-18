@@ -55,5 +55,10 @@ namespace MusicOrganizer
             var text = SearchTextBox.Text;
             Trace.WriteLine(text);
         }
+
+        private void TitleHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start("cmd", $"/c start {e.Uri.AbsoluteUri}");
+        }
     }
 }
