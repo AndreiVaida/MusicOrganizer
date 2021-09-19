@@ -20,7 +20,7 @@
         
         <DockPanel LastChildFill="False" Margin="10,80,10,10">
             <!--Songs-->
-            <local:SongsUserControl DockPanel.Dock = "Left"/>
+            <local:SongsUserControl DockPanel.Dock = "Left" Margin="0,0,10,0"/>
             <!--Filters-->
             <local:FiltersUserControl DockPanel.Dock = "Right"/>
         </DockPanel>

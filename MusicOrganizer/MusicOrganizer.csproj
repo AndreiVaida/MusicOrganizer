@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="service\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\search_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

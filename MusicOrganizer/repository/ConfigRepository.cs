@@ -12,18 +12,18 @@ namespace MusicOrganizer.repository
     {
         private readonly string _xmlFilePath;
         private readonly ILogger _logger;
-        private IDictionary<Filter, List<string>> _filters;
+        private IDictionary<FilterType, List<string>> _filterTypes;
 
         public ConfigRepository(string xmlFilePath)
         {
             _xmlFilePath = xmlFilePath;
-            _logger = ComponentProvider.logger;
+            _logger = ComponentProvider.Logger;
             LoadFiltersFromFile();
         }
 
         private void LoadFiltersFromFile()
         {
-            _filters = new Dictionary<Filter, List<string>>();
+            _filterTypes = new Dictionary<FilterType, List<string>>();
             var doc = new XmlDocument();
 
             try
@@ -32,9 +32,9 @@ namespace MusicOrganizer.repository
                 foreach (XmlNode filterTypeNode in doc.SelectSingleNode("AppConfig/Filters").ChildNodes)
                 {
                     var filters = LoadFiltersFromNode(filterTypeNode, out var filterType);
-                    _filters.Add(filterType, filters);
+                    _filterTypes.Add(filterType, filters);
                 }
-                _logger.Info($"Filters loaded successfully from file: {_filters.Keys.Count} types and {_filters.Values.SelectMany(x => x).ToList().Count} values.");
+                _logger.Info($"Filters loaded successfully from file: {_filterTypes.Keys.Count} types and {_filterTypes.Values.SelectMany(x => x).ToList().Count} values.");
             }
             catch (Exception e)
             {
@@ -42,11 +42,11 @@ namespace MusicOrganizer.repository
             }
         }
 
-        private static List<string> LoadFiltersFromNode(XmlNode filterTypeNode, out Filter filterType)
+        private static List<string> LoadFiltersFromNode(XmlNode filterTypeNode, out FilterType filterType)
         {
             var filters = new List<string>();
             var filterTypeString = filterTypeNode.FirstChild.Name;
-            filterType = Enum.Parse<Filter>(filterTypeString);
+            filterType = Enum.Parse<FilterType>(filterTypeString);
 
             foreach (XmlNode filterNode in filterTypeNode.ChildNodes)
             {
@@ -56,11 +56,11 @@ namespace MusicOrganizer.repository
             return filters;
         }
 
-        public List<string> GetFilters(Filter filter)
+        public List<string> GetFilters(FilterType filterType)
         {
-            if (!_filters.TryGetValue(filter, out var filters))
+            if (!_filterTypes.TryGetValue(filterType, out var filters))
             {
-                _logger.Warning($"Filter {filter} not found in repository.");
+                _logger.Warning($"Filter {filterType} not found in repository.");
                 return new List<string>();
             }
             return filters;

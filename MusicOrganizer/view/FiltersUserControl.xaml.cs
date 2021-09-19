@@ -19,17 +19,17 @@ namespace MusicOrganizer.view
 
         private void InitializeFilters()
         {
-            InitializeFilter(GenreFilterPanel, Filter.Genre);
-            InitializeFilter(ToneFilterPanel, Filter.Tone);
-            InitializeFilter(PaceFilterPanel, Filter.Pace);
+            InitializeFilter(GenreFilterPanel, FilterType.Genre);
+            InitializeFilter(ToneFilterPanel, FilterType.Tone);
+            InitializeFilter(PaceFilterPanel, FilterType.Pace);
             InitializeRatingFilter();
-            InitializeFilter(VocalsFilterPanel, Filter.Voice);
-            InitializeFilter(InstrumentFilterPanel, Filter.Instrument);
-            InitializeFilter(CultureFilterPanel, Filter.Culture);
-            InitializeFilter(CopyrightFilterPanel, Filter.Copyright);
+            InitializeFilter(VocalsFilterPanel, FilterType.Voice);
+            InitializeFilter(InstrumentFilterPanel, FilterType.Instrument);
+            InitializeFilter(CultureFilterPanel, FilterType.Culture);
+            InitializeFilter(CopyrightFilterPanel, FilterType.Copyright);
         }
 
-        private void InitializeFilter(StackPanel filterPanel, Filter filterType)
+        private void InitializeFilter(StackPanel filterPanel, FilterType filterType)
         {
             var filters = _presenter.GetFilters(filterType);
             foreach (var filter in filters)

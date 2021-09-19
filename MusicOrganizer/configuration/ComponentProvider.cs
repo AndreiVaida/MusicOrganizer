@@ -1,5 +1,6 @@
 ﻿using MusicOrganizer.logger;
 using MusicOrganizer.repository;
+using MusicOrganizer.service;
 
 namespace MusicOrganizer.configuration
 {
@@ -7,7 +8,17 @@ namespace MusicOrganizer.configuration
     {
         private static readonly string XmlFilePath = "./configuration/AppConfig.xml";
 
-        public static readonly ILogger logger = new ConsoleLogger();
-        public static readonly ConfigRepository configRepository = new(XmlFilePath);
+        public static readonly ILogger Logger;
+        public static readonly ConfigRepository ConfigRepository;
+        public static readonly SongRepository SongRepository;
+        public static readonly SongService SongService;
+
+        static ComponentProvider()
+        {
+            Logger = new ConsoleLogger();
+            ConfigRepository = new(XmlFilePath);
+            SongRepository = new();
+            SongService = new(SongRepository);
+        }
     }
 }

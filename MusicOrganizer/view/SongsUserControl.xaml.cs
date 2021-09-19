@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MusicOrganizer.presenter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,19 @@ namespace MusicOrganizer.view
     /// </summary>
     public partial class SongsUserControl : UserControl
     {
+        private readonly SongsPresenter _presenter;
+
         public SongsUserControl()
         {
             InitializeComponent();
+            _presenter = new();
+
+            LoadAllSongs();
+        }
+
+        private void LoadAllSongs()
+        {
+            SongsGrid.DataContext = _presenter.GetAllSongs();
         }
     }
 }

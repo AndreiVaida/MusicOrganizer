@@ -1,7 +1,8 @@
 ﻿namespace MusicOrganizer.model
 {
-    public enum Filter
+    public enum FilterType
     {
+        Name,
         Genre,
         Tone,
         Pace,

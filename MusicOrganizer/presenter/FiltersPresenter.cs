@@ -13,12 +13,12 @@ namespace MusicOrganizer.presenter
 
         public FiltersPresenter()
         {
-            _configRepository = ComponentProvider.configRepository;
+            _configRepository = ComponentProvider.ConfigRepository;
         }
 
-        public List<CheckBox> GetFilters(Filter filterType) => GetConfigurableFilters(filterType);
+        public List<CheckBox> GetFilters(FilterType filterType) => GetConfigurableFilters(filterType);
 
-        private List<CheckBox> GetConfigurableFilters(Filter filterType)
+        private List<CheckBox> GetConfigurableFilters(FilterType filterType)
             => _configRepository.GetFilters(filterType)
                 .Select(filter => new CheckBox() { Content = filter })
                 .ToList();
