@@ -8,13 +8,7 @@
         Title="Gestionează folderele cu muzică" Height="450" Width="800">
     <Grid>
         <Label Content="Gestionează folderele cu muzică" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
-        <ListView x:Name="FoldersListView" Margin="10,40,120,10">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ListView x:Name="FoldersListView" Margin="10,40,120,10" ItemsSource="{Binding}"/>
         <Button x:Name="AddButton" Content="Adaugă..." Background="ForestGreen" HorizontalAlignment="Right" Margin="0,40,10,0" VerticalAlignment="Top" Width="100" Click="AddButton_Click"/>
         <Button x:Name="RemoveButton" Content="Elimină" Background="DarkRed" HorizontalAlignment="Right" Margin="0,70,10,0" VerticalAlignment="Top" Width="100" Click="RemoveButton_Click"/>
 

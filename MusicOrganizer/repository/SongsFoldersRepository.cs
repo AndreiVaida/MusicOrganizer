@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace MusicOrganizer.repository
 {
@@ -14,7 +13,11 @@ namespace MusicOrganizer.repository
             };
         }
 
-        internal void Remove(string folder)
+        public void Add(string folder)
+        {
+        }
+
+        public void Remove(string folder)
         {
         }
     }

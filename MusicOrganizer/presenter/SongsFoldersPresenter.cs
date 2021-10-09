@@ -25,9 +25,11 @@ namespace MusicOrganizer.presenter
             return _folders;
         }
 
-        public void AddFolder()
+        public void AddFolder(string folder)
         {
-            // todo: open folder chooser
+            if (_folders.Contains(folder)) return;
+            _repository.Add(folder);
+            _folders.Add(folder);
         }
 
         public void RemoveFolder(string folder)

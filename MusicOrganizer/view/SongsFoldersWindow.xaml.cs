@@ -1,17 +1,6 @@
-﻿using MusicOrganizer.presenter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using MusicOrganizer.presenter;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MusicOrganizer.view
 {
@@ -36,6 +25,19 @@ namespace MusicOrganizer.view
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            var folder = ShowPickerDialog();
+            if (folder == null) return;
+            _presenter.AddFolder(folder);
+        }
+
+        private static string ShowPickerDialog()
+        {
+            var dialog = new CommonOpenFileDialog();
+            dialog.InitialDirectory = "C";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                return dialog.FileName;
+            return null;
         }
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
