@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicOrganizer.view"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="1920" Background="#FF021427" FontFamily="Consolas" FontSize="16" Foreground="#FFDCD6F7">
+        Title="MainWindow" Height="1000" Width="1920">
     <Grid>
         <!--Title-->
         <Label Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="20" FontWeight="Bold">
@@ -17,13 +17,14 @@
         <!--Search bar-->
         <Image Margin="10,43,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Source="/resources/search_black.png" Width="24" Panel.ZIndex="1"/>
         <TextBox Padding="24,0,0,0" HorizontalAlignment="Left" Margin="10,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="771" Background="#FFDCD6F7" Foreground="#FF021427" ToolTip="Find a song" TextChanged="SearchTextBox_TextChanged" Name="SearchTextBox" Height="24"/>
-        
+
         <DockPanel LastChildFill="False" Margin="10,80,10,10">
             <!--Songs-->
             <local:SongsUserControl DockPanel.Dock = "Left" Margin="0,0,10,0"/>
             <!--Filters-->
             <local:FiltersUserControl DockPanel.Dock = "Right"/>
         </DockPanel>
+        <Button x:Name="ManageFoldersButton" Content="Gestionează folderele" HorizontalAlignment="Left" Margin="786,43,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.106,0.002" Height="24" Click="ManageFoldersButton_Click"/>
 
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Diagnostics;
+using MusicOrganizer.view;
 
 namespace MusicOrganizer
 {
@@ -9,6 +10,8 @@ namespace MusicOrganizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public SongsFoldersWindow _manageFoldersWindow { get; private set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -23,6 +26,23 @@ namespace MusicOrganizer
         private void TitleHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start("cmd", $"/c start {e.Uri.AbsoluteUri}");
+        }
+
+        private void ManageFoldersButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_manageFoldersWindow == null)
+            {
+                _manageFoldersWindow = new SongsFoldersWindow();
+                _manageFoldersWindow.Closed += ManageFoldersWindowClosed;
+            }
+
+            _manageFoldersWindow.Owner = this;
+            _manageFoldersWindow.Show();
+        }
+
+        private void ManageFoldersWindowClosed(object sender, System.EventArgs e)
+        {
+            _manageFoldersWindow = null;
         }
     }
 }

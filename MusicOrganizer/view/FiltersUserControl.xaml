@@ -12,19 +12,19 @@
             <StackPanel DockPanel.Dock = "Left" Width="200">
                 <StackPanel x:Name="GenreFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Gen muzical"/>
-                    <StackPanel Name="Genres"></StackPanel>
+                    <StackPanel x:Name="Genres"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="ToneFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Ton"/>
-                    <StackPanel Name="Tones"></StackPanel>
+                    <StackPanel x:Name="Tones"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="PaceFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Ritm"/>
-                    <StackPanel Name="Paces"></StackPanel>
+                    <StackPanel x:Name="Paces"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="RatingFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Evaluare minimă"/>
-                    <ComboBox Name="Ratings" Width="50" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="Ratings" Width="50" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <StackPanel x:Name="StarredFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <CheckBox Content="Favorit" FontWeight="Bold" Foreground="#FFFF691F"/>
@@ -34,19 +34,19 @@
             <StackPanel DockPanel.Dock = "Right" Width="250">
                 <StackPanel x:Name="VocalsFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Voce"/>
-                    <StackPanel Name="Vocals"></StackPanel>
+                    <StackPanel x:Name="Vocals"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="InstrumentFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Instrument"/>
-                    <StackPanel Name="Instruments"></StackPanel>
+                    <StackPanel x:Name="Instruments"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="CultureFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Cultură"/>
-                    <StackPanel Name="Cultures"></StackPanel>
+                    <StackPanel x:Name="Cultures"></StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="CopyrightFilterPanel" Style="{StaticResource ResourceKey=Filter}">
                     <Label Content="Copyright"/>
-                    <StackPanel Name="Copyrights"></StackPanel>
+                    <StackPanel x:Name="Copyrights"></StackPanel>
                 </StackPanel>
             </StackPanel>
         </DockPanel>

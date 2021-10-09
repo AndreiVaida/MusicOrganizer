@@ -4,6 +4,13 @@
              StartupUri="view/MainWindow.xaml">
     
     <Application.Resources>
+
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="#FF021427"/>
+            <Setter Property="Foreground" Value="#FFDCD6F7"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
         
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="#FFDCD6F7"/>
@@ -12,7 +19,18 @@
         <Style TargetType="CheckBox">
             <Setter Property="Foreground" Value="#FFDCD6F7"/>
         </Style>
-        
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#FFFF691F"/>
+            <Setter Property="Foreground" Value="#FFDCD6F7"/>
+            <Setter Property="Padding" Value="10,0,10,0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#04284e"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="Filter">
             <Setter Property="StackPanel.Margin" Value="0,0,0,20"/>
             <Style.Resources>

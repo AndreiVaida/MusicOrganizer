@@ -24,6 +24,7 @@
       <Tone>Dramatic</Tone>
       <Tone>Fericire</Tone>
       <Tone>Furie</Tone>
+      <Tone>Iubire</Tone>
       <Tone>Înălțător</Tone>
       <Tone>Înspăimântător</Tone>
       <Tone>Întunecat</Tone>
@@ -31,7 +32,6 @@
       <Tone>Motivant</Tone>
       <Tone>Nuntă</Tone>
       <Tone>Optimist</Tone>
-      <Tone>Romantic</Tone>
       <Tone>Trist</Tone>
     </Tones>
     <Paces>
@@ -46,14 +46,20 @@
     </Voices>
     <Instruments>
       <Instrument>Bas</Instrument>
-      <Instrument>Chitară</Instrument>
+      <Instrument>Chitară acustică</Instrument>
+      <Instrument>Chitară electrică</Instrument>
       <Instrument>Clopoței</Instrument>
+      <Instrument>Fluier</Instrument>
+      <Instrument>Fluierat</Instrument>
+      <Instrument>Harpă</Instrument>
       <Instrument>Orchestră</Instrument>
       <Instrument>Pian</Instrument>
+      <Instrument>Percuție</Instrument>
       <Instrument>Saxofon</Instrument>
       <Instrument>Sintetizator</Instrument>
       <Instrument>Tobe</Instrument>
       <Instrument>Trompetă</Instrument>
+      <Instrument>Vioară</Instrument>
     </Instruments>
     <Cultures>
       <Culture>România</Culture>

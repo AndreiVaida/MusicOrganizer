@@ -14,7 +14,7 @@ namespace MusicOrganizer.repository
             return new List<Song>
             {
                 new Song("A", "D/Muzică"),
-                new Song("B", "D/YouTube"),
+                new Song("B", "D/YouTube/Two steps from hell"),
                 new Song("C", "D/Muzică"),
             };
         }
