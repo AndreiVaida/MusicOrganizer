@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Diagnostics;
 using MusicOrganizer.view;
+using MusicOrganizer.configuration;
 
 namespace MusicOrganizer
 {
@@ -43,6 +44,11 @@ namespace MusicOrganizer
         private void ManageFoldersWindowClosed(object sender, System.EventArgs e)
         {
             _manageFoldersWindow = null;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ComponentProvider.DatabaseConnection?.Close();
         }
     }
 }

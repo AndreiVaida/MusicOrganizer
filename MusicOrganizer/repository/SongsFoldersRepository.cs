@@ -1,9 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Data.Sqlite;
+using MusicOrganizer.configuration;
+using System;
+using System.Collections.Generic;
 
 namespace MusicOrganizer.repository
 {
     public class SongsFoldersRepository
     {
+        private readonly SqliteConnection _database;
+
+        public SongsFoldersRepository()
+        {
+            _database = ComponentProvider.DatabaseConnection;
+        }
+
         public List<string> GetAll()
         {
             return new List<string>

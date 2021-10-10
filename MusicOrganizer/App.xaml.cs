@@ -7,9 +7,9 @@ namespace MusicOrganizer
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs args)
         {
-            base.OnStartup(e);
+            base.OnStartup(args);
 
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata
             {
