@@ -1,5 +1,6 @@
 ﻿using MusicOrganizer.model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,11 @@ namespace MusicOrganizer.repository
                 new Song("B", "D/YouTube/Two steps from hell"),
                 new Song("C", "D/Muzică"),
             };
+        }
+
+        public void Add(IEnumerable songs)
+        {
+
         }
     }
 }

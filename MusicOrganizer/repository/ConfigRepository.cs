@@ -42,6 +42,11 @@ namespace MusicOrganizer.repository
             }
         }
 
+        public IEnumerable<string> GetMusicExtensions()
+        {
+            return new List<string> { ".mp3", ".wav" };
+        }
+
         private static List<string> LoadFiltersFromNode(XmlNode filterTypeNode, out FilterType filterType)
         {
             var filters = new List<string>();

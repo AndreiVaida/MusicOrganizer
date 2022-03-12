@@ -4,6 +4,9 @@ using System.Diagnostics;
 using MusicOrganizer.view;
 using MusicOrganizer.configuration;
 using System.Windows.Input;
+using MusicOrganizer.service;
+using MusicOrganizer.repository;
+using MusicOrganizer.logger;
 
 namespace MusicOrganizer
 {
@@ -12,7 +15,10 @@ namespace MusicOrganizer
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SongsFoldersWindow _manageFoldersWindow { get; private set; }
+        private readonly ILogger _logger = ComponentProvider.Logger;
+        private SongService _songService = ComponentProvider.SongService;
+        private SongsFoldersRepository _songsFoldersRepository = ComponentProvider.SongsFoldersRepository;
+        private SongsFoldersWindow _manageFoldersWindow { get; set; }
 
         public MainWindow()
         {
@@ -44,7 +50,8 @@ namespace MusicOrganizer
 
         private void ReloadSongsButton_Click(object sender, MouseEventArgs e)
         {
-            Trace.WriteLine("Reload");
+            _logger.Info("Reload");
+            _songService.LoadSongs(_songsFoldersRepository.GetAll());
         }
 
         private void ManageFoldersWindowClosed(object sender, System.EventArgs e)
