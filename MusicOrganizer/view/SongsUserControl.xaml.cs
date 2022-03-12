@@ -33,7 +33,7 @@ namespace MusicOrganizer.view
 
         private void LoadAllSongs()
         {
-            SongsGrid.DataContext = _presenter.GetAllSongs();
+            SongsGrid.DataContext = _presenter.GetSongs();
         }
     }
 }

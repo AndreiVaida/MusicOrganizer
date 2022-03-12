@@ -6,7 +6,7 @@ namespace MusicOrganizer.model
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string PathToFile { get; set; }
+        public string FilePath { get; set; }
         public string Composer { get; set; }
         public List<string> Genres { get; set; }
         public List<string> Tones { get; set; }
@@ -23,7 +23,24 @@ namespace MusicOrganizer.model
         public Song(string name, string pathToFile)
         {
             Name = name;
-            PathToFile = pathToFile;
+            FilePath = pathToFile;
+        }
+
+        public Song(int id, string name, string pathToFile, string composer, List<string> genres, List<string> tones, string pace, int rating, bool starred, string voice, List<string> instruments, string culture, string copyright)
+        {
+            Id = id;
+            Name = name;
+            FilePath = pathToFile;
+            Composer = composer;
+            Genres = genres;
+            Tones = tones;
+            Pace = pace;
+            Rating = rating;
+            Starred = starred;
+            Voice = voice;
+            Instruments = instruments;
+            Culture = culture;
+            Copyright = copyright;
         }
     }
 }

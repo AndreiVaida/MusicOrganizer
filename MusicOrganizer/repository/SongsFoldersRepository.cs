@@ -75,13 +75,12 @@ namespace MusicOrganizer.repository
             {
                 using var command = _database.CreateCommand();
                 command.CommandText = $"CREATE TABLE IF NOT EXISTS {FOLDERS_TABLE}({NAME_COLUMN} TEXT PRIMARY KEY)";
-                var result = command.ExecuteNonQuery();
-                if (result == 1)
-                    _logger.Info($"CREATED TABLE: {FOLDERS_TABLE}.");
+
+                command.ExecuteNonQuery();
             }
             catch (SqliteException e)
             {
-                _logger.Error("Cannot create Songs Folder table.", e);
+                _logger.Error($"Cannot create Songs {FOLDERS_TABLE} table.", e);
             }
         }
     }
