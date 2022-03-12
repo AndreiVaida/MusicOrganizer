@@ -15,6 +15,8 @@ namespace MusicOrganizer.configuration
         public static readonly ConfigRepository ConfigRepository;
         public static readonly SongRepository SongRepository;
         public static readonly SongService SongService;
+        public static readonly SongsFoldersRepository SongsFoldersRepository;
+
         public static SqliteConnection DatabaseConnection
         {
             get
@@ -35,6 +37,7 @@ namespace MusicOrganizer.configuration
             ConfigRepository = new(XmlFilePath);
             SongRepository = new();
             SongService = new(SongRepository);
+            SongsFoldersRepository = new();
         }
     }
 }

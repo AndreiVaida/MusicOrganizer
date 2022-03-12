@@ -1,34 +1,88 @@
 ﻿using Microsoft.Data.Sqlite;
 using MusicOrganizer.configuration;
-using System;
+using MusicOrganizer.logger;
 using System.Collections.Generic;
 
 namespace MusicOrganizer.repository
 {
     public class SongsFoldersRepository
     {
+        private const string FOLDERS_TABLE = "folders";
+        private const string NAME_COLUMN = "name";
         private readonly SqliteConnection _database;
+        private readonly ILogger _logger;
 
         public SongsFoldersRepository()
         {
             _database = ComponentProvider.DatabaseConnection;
+            _logger = ComponentProvider.Logger;
+            CreateTableIfNotExist();
         }
 
         public List<string> GetAll()
         {
-            return new List<string>
+            var folders = new List<string>();
+            var command = _database.CreateCommand();
+            command.CommandText = $"SELECT * FROM {FOLDERS_TABLE}";
+            using (var reader = command.ExecuteReader())
             {
-                "D/YouTube/Two steps from hell",
-                "D/Filme și clipuri/De pe YouTube/Two steps from hell"
-            };
+                while (reader.Read())
+                {
+                    var folder = reader.GetString(0);
+                    folders.Add(folder);
+                }
+            }
+            return folders;
         }
 
-        public void Add(string folder)
+        public bool Add(string folder)
         {
+            try
+            {
+                using var command = _database.CreateCommand();
+                command.CommandText = $"INSERT INTO {FOLDERS_TABLE}({NAME_COLUMN}) VALUES($folder)";
+                command.Parameters.AddWithValue("$folder", folder);
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (SqliteException e)
+            {
+                _logger.Error("Cannot insert song folder to DB.", e);
+                return false;
+            }
         }
 
-        public void Remove(string folder)
+        public bool Remove(string folder)
         {
+            try
+            {
+                using var command = _database.CreateCommand();
+                command.CommandText = $"DELETE FROM {FOLDERS_TABLE} WHERE {NAME_COLUMN}=$folder";
+                command.Parameters.AddWithValue("$folder", folder);
+                command.ExecuteNonQuery();
+                return true;
+            }
+            catch (SqliteException e)
+            {
+                _logger.Error("Cannot insert song folder to DB.", e);
+                return false;
+            }
+        }
+
+        private void CreateTableIfNotExist()
+        {
+            try
+            {
+                using var command = _database.CreateCommand();
+                command.CommandText = $"CREATE TABLE IF NOT EXISTS {FOLDERS_TABLE}({NAME_COLUMN} TEXT PRIMARY KEY)";
+                var result = command.ExecuteNonQuery();
+                if (result == 1)
+                    _logger.Info($"CREATED TABLE: {FOLDERS_TABLE}.");
+            }
+            catch (SqliteException e)
+            {
+                _logger.Error("Cannot create Songs Folder table.", e);
+            }
         }
     }
 }

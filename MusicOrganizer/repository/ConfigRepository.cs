@@ -38,7 +38,7 @@ namespace MusicOrganizer.repository
             }
             catch (Exception e)
             {
-                _logger.Error($"Cannot read filters from file '{_xmlFilePath}': {e}");
+                _logger.Error($"Cannot read filters from file '{_xmlFilePath}'.", e);
             }
         }
 

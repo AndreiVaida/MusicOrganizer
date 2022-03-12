@@ -1,4 +1,5 @@
-﻿using MusicOrganizer.repository;
+﻿using MusicOrganizer.configuration;
+using MusicOrganizer.repository;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -6,12 +7,11 @@ namespace MusicOrganizer.presenter
 {
     public class SongsFoldersPresenter
     {
-        private readonly SongsFoldersRepository _repository;
+        private readonly SongsFoldersRepository _repository = ComponentProvider.SongsFoldersRepository;
         private readonly ObservableCollection<string> _folders;
 
         public SongsFoldersPresenter()
         {
-            _repository = new SongsFoldersRepository();
             _folders = new ObservableCollection<string>();
         }
 
@@ -21,21 +21,21 @@ namespace MusicOrganizer.presenter
             _folders.Clear();
             foreach (var folder in folders)
                 _folders.Add(folder);
-            
+
             return _folders;
         }
 
         public void AddFolder(string folder)
         {
             if (_folders.Contains(folder)) return;
-            _repository.Add(folder);
-            _folders.Add(folder);
+            if (_repository.Add(folder))
+                _folders.Add(folder);
         }
 
         public void RemoveFolder(string folder)
         {
-            _repository.Remove(folder);
-            _folders.Remove(folder);
+            if (_repository.Remove(folder))
+                _folders.Remove(folder);
         }
     }
 }
