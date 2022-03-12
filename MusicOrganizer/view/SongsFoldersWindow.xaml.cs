@@ -32,12 +32,15 @@ namespace MusicOrganizer.view
 
         private static string ShowPickerDialog()
         {
-            var dialog = new CommonOpenFileDialog();
-            dialog.InitialDirectory = "C";
-            dialog.IsFolderPicker = true;
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-                return dialog.FileName;
-            return null;
+            var dialog = new CommonOpenFileDialog
+            {
+                InitialDirectory = "C",
+                IsFolderPicker = true
+            };
+
+            return dialog.ShowDialog() == CommonFileDialogResult.Ok
+                ? dialog.FileName
+                : null;
         }
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e)

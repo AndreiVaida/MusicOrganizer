@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using MusicOrganizer.view;
 using MusicOrganizer.configuration;
+using System.Windows.Input;
 
 namespace MusicOrganizer
 {
@@ -39,6 +40,11 @@ namespace MusicOrganizer
 
             _manageFoldersWindow.Owner = this;
             _manageFoldersWindow.Show();
+        }
+
+        private void ReloadSongsButton_Click(object sender, MouseEventArgs e)
+        {
+            Trace.WriteLine("Reload");
         }
 
         private void ManageFoldersWindowClosed(object sender, System.EventArgs e)

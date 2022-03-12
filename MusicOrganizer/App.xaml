@@ -31,6 +31,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="MinorButton" TargetType="Image">
+            <Setter Property="Opacity" Value="0.5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="Filter">
             <Setter Property="StackPanel.Margin" Value="0,0,0,20"/>
             <Style.Resources>

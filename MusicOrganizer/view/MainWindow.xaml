@@ -26,6 +26,11 @@
             <local:FiltersUserControl DockPanel.Dock = "Right"/>
         </DockPanel>
         <Button x:Name="ManageFoldersButton" Content="Gestionează folderele" HorizontalAlignment="Left" Margin="786,43,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.106,0.002" Height="24" Click="ManageFoldersButton_Click"/>
+        <Image x:Name="ReloadSongsButton" HorizontalAlignment="Left" Height="24" Width="24" Margin="998,43,0,0" VerticalAlignment="Top" Source="/resources/refresh_icon.png" MouseDown="ReloadSongsButton_Click" Style="{StaticResource ResourceKey=MinorButton }">
+            <Image.ToolTip>
+                <ToolTip Content="Reîncarcă melodiile"/>
+            </Image.ToolTip>
+        </Image>
 
     </Grid>
 </Window>
