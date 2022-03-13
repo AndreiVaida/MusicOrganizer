@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.WindowsAPICodePack-Shell" Version="1.1.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
     <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
+    <PackageReference Include="z440.atl.core" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

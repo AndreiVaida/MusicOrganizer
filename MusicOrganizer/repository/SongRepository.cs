@@ -4,7 +4,9 @@ using MusicOrganizer.logger;
 using MusicOrganizer.model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using ATL;
 
 namespace MusicOrganizer.repository
 {
@@ -27,13 +29,20 @@ namespace MusicOrganizer.repository
         private const char LIST_SEPARATOR = ',';
         private readonly SqliteConnection _database;
         private readonly ILogger _logger;
+        private readonly IEnumerable<string> _fileExtensions;
 
         public SongRepository()
         {
             _database = ComponentProvider.DatabaseConnection;
             _logger = ComponentProvider.Logger;
+            _fileExtensions = ComponentProvider.ConfigRepository.GetMusicExtensions();
             CreateTableIfNotExist();
         }
+
+        public IEnumerable<Track> GetMusicFiles(string rootFolder)
+            => Directory.GetFiles($"{rootFolder}", "", SearchOption.AllDirectories)
+                        .Where(file => _fileExtensions.Any(extension => file.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase)))
+                        .Select(file => new Track(file));
 
         public List<Song> GetSongs(Search search)
         {

@@ -51,7 +51,7 @@ namespace MusicOrganizer
         private void ReloadSongsButton_Click(object sender, MouseEventArgs e)
         {
             _logger.Info("Reload");
-            _songService.LoadSongs(_songsFoldersRepository.GetAll());
+            _songService.ImportSongsFromDisk(_songsFoldersRepository.GetAll());
         }
 
         private void ManageFoldersWindowClosed(object sender, System.EventArgs e)

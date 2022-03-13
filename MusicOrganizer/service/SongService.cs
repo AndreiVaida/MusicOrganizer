@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
+using ATL;
 
 namespace MusicOrganizer.service
 {
@@ -13,22 +14,18 @@ namespace MusicOrganizer.service
     {
         private readonly ILogger _logger;
         private readonly SongRepository _songRepository;
-        private readonly ConfigRepository _configRepository;
-        private readonly IEnumerable<string> _fileExtensions;
         public readonly Subject<IEnumerable<Song>> SongUpdates;
 
         public SongService(SongRepository songRepository)
         {
             _logger = ComponentProvider.Logger;
-            _configRepository = ComponentProvider.ConfigRepository;
             _songRepository = songRepository;
-            _fileExtensions = _configRepository.GetMusicExtensions();
             SongUpdates = new Subject<IEnumerable<Song>>();
         }
 
         public IEnumerable<Song> GetSongs(Search search) => _songRepository.GetSongs(search);
 
-        public void LoadSongs(IEnumerable<string> rootFolderPaths)
+        public void ImportSongsFromDisk(IEnumerable<string> rootFolderPaths)
         {
             var songs = new List<Song>();
 
@@ -36,25 +33,26 @@ namespace MusicOrganizer.service
             {
                 try
                 {
-                    var files = Directory.GetFiles($"{rootFolder}", "", SearchOption.AllDirectories)
-                        .Where(file => _fileExtensions.Any(extension => file.EndsWith(extension, System.StringComparison.CurrentCultureIgnoreCase)));
-
-                    songs.AddRange(files.Select(InitSongFromFile));
+                    var tracks = _songRepository.GetMusicFiles(rootFolder);
+                    songs.AddRange(tracks.Select(ConvertToSong));
                 }
                 catch (IOException e)
                 {
                     _logger.Error($"Cannot read songs from {rootFolder}.", e);
                 }
             }
-            _logger.Info($"Loaded {songs.Count} songs from {rootFolderPaths}.");
+            _logger.Info($"Loaded {songs.Count} songs from {string.Join(", ", rootFolderPaths)}.");
             _songRepository.AddOrUpdate(songs);
 
             SongUpdates.OnNext(_songRepository.GetSongs(new Search()));
         }
 
-        private Song InitSongFromFile(string filePath)
+        private Song ConvertToSong(Track track)
         {
-            var name = filePath.Split(Path.DirectorySeparatorChar).Last();
+            var filePath = track.Path;
+            var name = !string.IsNullOrWhiteSpace(track.Title)
+                ? track.Title
+                : filePath.Split(Path.DirectorySeparatorChar).Last();
             return new Song(name, filePath);
         }
     }
