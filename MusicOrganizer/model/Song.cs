@@ -20,8 +20,9 @@ namespace MusicOrganizer.model
 
         public Song() {}
 
-        public Song(string name, string pathToFile)
+        public Song(int id, string name, string pathToFile)
         {
+            Id = id;
             Name = name;
             FilePath = pathToFile;
         }

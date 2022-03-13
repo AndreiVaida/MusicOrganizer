@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Subjects;
 using ATL;
+using System;
 
 namespace MusicOrganizer.service
 {
@@ -43,17 +44,28 @@ namespace MusicOrganizer.service
             }
             _logger.Info($"Loaded {songs.Count} songs from {string.Join(", ", rootFolderPaths)}.");
             _songRepository.AddOrUpdate(songs);
+            //SaveIdToNewFiles(songs);
 
             SongUpdates.OnNext(_songRepository.GetSongs(new Search()));
         }
 
         private Song ConvertToSong(Track track)
         {
+            int id = 0;
+            if (track.AdditionalFields.TryGetValue(nameof(Song.Id), out var currentId))
+                id = Convert.ToInt32(currentId);
             var filePath = track.Path;
             var name = !string.IsNullOrWhiteSpace(track.Title)
                 ? track.Title
                 : filePath.Split(Path.DirectorySeparatorChar).Last();
-            return new Song(name, filePath);
+            return new Song(id, name, filePath);
         }
+
+        //private void SaveIdToNewFiles(IEnumerable<Track> songs)
+        //{
+        //    songs.Where(song => song.Id == 0)
+        //        .Select(song => _songRepository.GetByPath(song.FilePath))
+        //        .Select(track => _songRepository.SaveToFile(track))
+        //}
     }
 }
