@@ -29,6 +29,10 @@ namespace MusicOrganizer.repository {
         private readonly ILogger _logger;
         private readonly IEnumerable<string> _fileExtensions;
 
+        private readonly string InsertCommandText = $"INSERT INTO {SONGS_TABLE}(" +
+                        $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
+                        $"VALUES($id, $name, $path, $composer, $genres, $tones, $pace, $rating, $starred, $voice, $instruments, $culture, $copyright)";
+
         public SongRepository() {
             _database = ComponentProvider.DatabaseConnection;
             _logger = ComponentProvider.Logger;
@@ -72,34 +76,53 @@ namespace MusicOrganizer.repository {
             return songs;
         }
 
-        public void AddOrUpdate(IEnumerable<Song> songs) {
-            var commandText = $"INSERT INTO {SONGS_TABLE}(" +
-                        $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
-                        $"VALUES($id, $name, $path, $composer, $genres, $tones, $pace, $rating, $starred, $voice, $instruments, $culture, $copyright)";
+        /// <summary>
+        /// Add or update into DB the provided songs.
+        /// The inserted songs receives an ID, so the provided songs may be updated.
+        /// <return>The inserted songs. They have the assigned ID.</return>
+        /// </summary>
+        public IEnumerable<Song> Add(IEnumerable<Song> songs) {
+            List<Song> savedSongs = new();
 
             foreach (var song in songs) {
                 try {
-                    using var command = _database.CreateCommand();
-                    command.CommandText = commandText;
-                    command.Parameters.AddWithValue("$id", song.Id != 0 ? song.Id : DBNull.Value);
-                    command.Parameters.AddWithValue("name", song.Name);
-                    command.Parameters.AddWithValue("$path", song.FilePath);
-                    command.Parameters.AddWithValue("$composer", GetOrDBNull(song.Composer));
-                    command.Parameters.AddWithValue("$genres", string.Join(LIST_SEPARATOR, song.Genres ?? new List<string>()));
-                    command.Parameters.AddWithValue("$tones", string.Join(LIST_SEPARATOR, song.Tones ?? new List<string>()));
-                    command.Parameters.AddWithValue("$pace", GetOrDBNull(song.Pace));
-                    command.Parameters.AddWithValue("$rating", song.Rating);
-                    command.Parameters.AddWithValue("$starred", song.Starred.ToString());
-                    command.Parameters.AddWithValue("$voice", GetOrDBNull(song.Voice));
-                    command.Parameters.AddWithValue("$instruments", string.Join(LIST_SEPARATOR, song.Instruments ?? new List<string>()));
-                    command.Parameters.AddWithValue("$culture", GetOrDBNull(song.Culture));
-                    command.Parameters.AddWithValue("$copyright", GetOrDBNull(song.Copyright));
-                    command.ExecuteNonQuery();
+                    Insert(song);
+                    if (song.Id == 0) {
+                        song.Id = GetLastInsertedRowId();
+                    }
+                    savedSongs.Add(song);
                 }
                 catch (SqliteException e) {
                     _logger.Error($"Cannot insert song {song} to DB.", e);
                 }
             }
+            return savedSongs;
+        }
+
+        private void Insert(Song song) {
+            using var command = _database.CreateCommand();
+            command.CommandText = InsertCommandText;
+            command.Parameters.AddWithValue("$id", song.Id != 0 ? song.Id : DBNull.Value);
+            command.Parameters.AddWithValue("name", song.Name);
+            command.Parameters.AddWithValue("$path", song.FilePath);
+            command.Parameters.AddWithValue("$composer", GetOrDBNull(song.Composer));
+            command.Parameters.AddWithValue("$genres", string.Join(LIST_SEPARATOR, song.Genres ?? new List<string>()));
+            command.Parameters.AddWithValue("$tones", string.Join(LIST_SEPARATOR, song.Tones ?? new List<string>()));
+            command.Parameters.AddWithValue("$pace", GetOrDBNull(song.Pace));
+            command.Parameters.AddWithValue("$rating", song.Rating);
+            command.Parameters.AddWithValue("$starred", song.Starred.ToString());
+            command.Parameters.AddWithValue("$voice", GetOrDBNull(song.Voice));
+            command.Parameters.AddWithValue("$instruments", string.Join(LIST_SEPARATOR, song.Instruments ?? new List<string>()));
+            command.Parameters.AddWithValue("$culture", GetOrDBNull(song.Culture));
+            command.Parameters.AddWithValue("$copyright", GetOrDBNull(song.Copyright));
+            command.ExecuteNonQuery();
+        }
+
+        private int GetLastInsertedRowId() {
+            using var command = _database.CreateCommand();
+            command.CommandText = "select last_insert_rowid()";
+            Int64 LastRowID64 = (Int64)command.ExecuteScalar();
+            return (int)LastRowID64;
         }
 
         private object GetOrDBNull(string text) => text != null ? text : DBNull.Value;

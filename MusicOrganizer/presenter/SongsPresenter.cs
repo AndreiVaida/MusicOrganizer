@@ -1,4 +1,5 @@
 ﻿using MusicOrganizer.configuration;
+using MusicOrganizer.events;
 using MusicOrganizer.model;
 using MusicOrganizer.service;
 using System;
@@ -23,15 +24,31 @@ namespace MusicOrganizer.presenter {
             return _songs;
         }
 
-        private void SetSongs(IEnumerable<Song> newSongs) {
+        private void SetSongs(IEnumerable<Song> songs) {
             _songs.Clear();
-            foreach (var song in newSongs)
+            foreach (var song in songs)
                 _songs.Add(song);
         }
 
+        private void AddSongs(IEnumerable<Song> songs) {
+            foreach (var song in songs) {
+                _songs.Add(song);
+            }
+        }
+
+        private void RemoveSongs(IEnumerable<Song> songs) {
+            foreach (var song in songs) {
+                _songs.Remove(song);
+            }
+        }
+
         private void SubscribeToSongUpdates() {
-            _songService.SongUpdates.Subscribe(newSongs => {
-                SetSongs(newSongs);
+            _songService.SongUpdates.Subscribe(songEvent => {
+                switch (songEvent.EventType) {
+                    case EventType.Add: AddSongs(songEvent.Songs); break;
+                    case EventType.Remove: RemoveSongs(songEvent.Songs); break;
+                    default: throw new ArgumentException("Invalid enum value", nameof(songEvent.EventType));
+                }
             });
         }
     }

@@ -14,38 +14,36 @@ namespace MusicOrganizer.service {
     public class SongService {
         private readonly ILogger _logger;
         private readonly SongRepository _songRepository;
-        public readonly Subject<IEnumerable<Song>> SongUpdates;
+        public readonly Subject<SongEvent> SongUpdates;
 
         public SongService(SongRepository songRepository, IObservable<FolderEvent> songFolderUpdates) {
             _logger = ComponentProvider.Logger;
             _songRepository = songRepository;
-            SongUpdates = new Subject<IEnumerable<Song>>();
+            SongUpdates = new();
             songFolderUpdates.Subscribe(OnNextFolderUpdate, OnErrorFolderUpdate);
         }
 
         public IEnumerable<Song> GetSongs(Search search) => _songRepository.GetSongs(search);
 
         public void ImportSongsFromDisk(IEnumerable<string> rootFolderPaths) {
-            var songs = new List<Song>();
             foreach (var rootFolder in rootFolderPaths) {
-                songs.AddRange(ImportSongsFromDisk(rootFolder));
+                ImportSongsFromDisk(rootFolder);
             }
-
-            _logger.Info($"Loaded {songs.Count} songs from {string.Join(", ", rootFolderPaths)}.");
-            _songRepository.AddOrUpdate(songs);
-            // SaveIdOfNewSongsToDisk(songs);
-
-            SongUpdates.OnNext(_songRepository.GetSongs(new Search()));
         }
 
-        private List<Song> ImportSongsFromDisk(string rootFolderPath) {
+        private void ImportSongsFromDisk(string rootFolderPath) {
             try {
                 var tracks = _songRepository.GetMusicFiles(rootFolderPath);
-                return tracks.Select(ConvertToSong).ToList();
+                var songs = tracks.Select(ConvertToSong);
+
+                _logger.Info($"Loaded {songs.Count()} songs from {rootFolderPath}.");
+                songs = _songRepository.Add(songs);
+
+                SongUpdates.OnNext(new(songs, EventType.Add));
+                // SaveIdOfNewSongsToDisk(songs);
             }
             catch (IOException e) {
                 _logger.Error($"Cannot read songs from {rootFolderPath}.", e);
-                return new();
             }
         }
 
