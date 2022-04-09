@@ -4,13 +4,11 @@ using MusicOrganizer.logger;
 using MusicOrganizer.model;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using ATL;
 using System.Data;
 
 namespace MusicOrganizer.repository {
-    public class SongRepository {
+    public class SongDatabaseRepositoryImpl : SongDatabaseRepository {
         private const string SONGS_TABLE = "songs";
         private const string ID_COLUMN = "id";
         private const string NAME_COLUMN = "name";
@@ -28,7 +26,6 @@ namespace MusicOrganizer.repository {
         private const char LIST_SEPARATOR = ',';
         private readonly SqliteConnection _database;
         private readonly ILogger _logger;
-        private readonly IEnumerable<string> _fileExtensions;
 
         private readonly string InsertCommandText = $"INSERT INTO {SONGS_TABLE}(" +
             $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
@@ -36,19 +33,13 @@ namespace MusicOrganizer.repository {
         private readonly string SelectByFolderCommandText = $"SELECT * FROM {SONGS_TABLE} WHERE {PATH_COLUMN} LIKE $folderPath";
         private readonly string DeleteByFolderCommandText = $"DELETE FROM {SONGS_TABLE} WHERE {PATH_COLUMN} LIKE $folderPath";
 
-        public SongRepository() {
+        public SongDatabaseRepositoryImpl() {
             _database = ComponentProvider.DatabaseConnection;
             _logger = ComponentProvider.Logger;
-            _fileExtensions = ComponentProvider.ConfigRepository.GetMusicExtensions();
             CreateTableIfNotExist();
         }
 
-        public IEnumerable<Track> GetMusicFiles(string rootFolder)
-            => Directory.GetFiles($"{rootFolder}", "", SearchOption.AllDirectories)
-                        .Where(file => _fileExtensions.Any(extension => file.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase)))
-                        .Select(file => new Track(file));
-
-        public IEnumerable<Song> GetSongs(Search search) {
+        public IEnumerable<Song> Search(Search search) {
             var command = _database.CreateCommand();
             command.CommandText = $"SELECT * FROM {SONGS_TABLE}";
             using var reader = command.ExecuteReader();

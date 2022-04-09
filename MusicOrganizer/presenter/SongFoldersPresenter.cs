@@ -2,6 +2,7 @@
 using MusicOrganizer.service;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace MusicOrganizer.presenter {
     public class SongFoldersPresenter {
@@ -15,7 +16,7 @@ namespace MusicOrganizer.presenter {
 
         public INotifyCollectionChanged GetMusicFolders() {
             _folders.Clear();
-            _songFolderService.GetAll().ForEach(_folders.Add);
+            _songFolderService.GetAll().ToList().ForEach(_folders.Add);
             return _folders;
         }
 

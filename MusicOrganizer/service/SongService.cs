@@ -14,19 +14,21 @@ using System.Reactive.Linq;
 namespace MusicOrganizer.service {
     public class SongService {
         private readonly ILogger _logger;
-        private readonly SongRepository _songRepository;
+        private readonly SongDiskRepository _songDiskRepository;
+        private readonly SongDatabaseRepository _songDatabaseRepository;
         private readonly Subject<SongEvent> _songUpdates;
         public readonly IObservable<SongEvent> SongUpdates;
 
-        public SongService(SongRepository songRepository, IObservable<FolderEvent> songFolderUpdates) {
+        public SongService(SongDiskRepository songDiskRepository, SongDatabaseRepository songDatabaseRepository, IObservable<FolderEvent> songFolderUpdates) {
             _logger = ComponentProvider.Logger;
-            _songRepository = songRepository;
+            _songDiskRepository = songDiskRepository;
+            _songDatabaseRepository = songDatabaseRepository;
             _songUpdates = new();
             SongUpdates = _songUpdates.AsObservable();
             songFolderUpdates.Subscribe(OnNextFolderUpdate, OnErrorFolderUpdate);
         }
 
-        public IEnumerable<Song> GetSongs(Search search) => _songRepository.GetSongs(search);
+        public IEnumerable<Song> GetSongs(Search search) => _songDatabaseRepository.Search(search);
 
         public void ImportSongsFromDisk(IEnumerable<string> rootFolderPaths) {
             foreach (var rootFolder in rootFolderPaths) {
@@ -36,11 +38,11 @@ namespace MusicOrganizer.service {
 
         private void ImportSongsFromDisk(string rootFolderPath) {
             try {
-                var tracks = _songRepository.GetMusicFiles(rootFolderPath);
+                var tracks = _songDiskRepository.GetMusicFiles(rootFolderPath);
                 var songs = tracks.Select(ConvertToSong);
 
                 _logger.Info($"Loaded {songs.Count()} songs from {rootFolderPath}.");
-                songs = _songRepository.Add(songs);
+                songs = _songDatabaseRepository.Add(songs);
 
                 _songUpdates.OnNext(new(songs, EventType.Add));
                 // SaveIdOfNewSongsToDisk(songs);
@@ -64,8 +66,8 @@ namespace MusicOrganizer.service {
 
         private void RemoveSongs(string folderPath) {
             folderPath += Path.DirectorySeparatorChar;
-            var removedSongs = _songRepository.GetByFolderPath(folderPath);
-            var numberOfSongsDeleted = _songRepository.RemoveByFolder(folderPath);
+            var removedSongs = _songDatabaseRepository.GetByFolderPath(folderPath);
+            var numberOfSongsDeleted = _songDatabaseRepository.RemoveByFolder(folderPath);
             _logger.Info($"{numberOfSongsDeleted} songs deleted with folder {folderPath}.");
             _songUpdates.OnNext(new(removedSongs, EventType.Remove));
         }

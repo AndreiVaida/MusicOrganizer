@@ -12,7 +12,8 @@ namespace MusicOrganizer.configuration {
         public static readonly ILogger Logger;
         public static readonly ConfigRepository ConfigRepository;
         public static readonly SongFolderRepository SongFolderRepository;
-        public static readonly SongRepository SongRepository;
+        public static readonly SongDiskRepository SongDiskRepository;
+        public static readonly SongDatabaseRepository SongDatabaseRepository;
         public static readonly SongFolderService SongFolderService;
         public static readonly SongService SongService;
 
@@ -30,10 +31,11 @@ namespace MusicOrganizer.configuration {
         static ComponentProvider() {
             Logger = new ConsoleLogger();
             ConfigRepository = new(XmlFilePath);
-            SongFolderRepository = new();
-            SongRepository = new();
+            SongFolderRepository = new SongFolderRepositoryImpl();
+            SongDiskRepository = new SongDiskRepositoryImpl();
+            SongDatabaseRepository = new SongDatabaseRepositoryImpl();
             SongFolderService = new(SongFolderRepository);
-            SongService = new(SongRepository, SongFolderService.SongFolderUpdates);
+            SongService = new(SongDiskRepository, SongDatabaseRepository, SongFolderService.SongFolderUpdates);
         }
     }
 }

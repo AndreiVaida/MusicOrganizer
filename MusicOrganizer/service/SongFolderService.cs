@@ -17,7 +17,7 @@ namespace MusicOrganizer.service {
             SongFolderUpdates = _songFolderUpdates.AsObservable();
         }
 
-        public List<string> GetAll() => _repository.GetAll();
+        public IEnumerable<string> GetAll() => _repository.GetAll();
         public bool Add(string folderPath) {
             var added = _repository.Add(folderPath);
             if (added) {
