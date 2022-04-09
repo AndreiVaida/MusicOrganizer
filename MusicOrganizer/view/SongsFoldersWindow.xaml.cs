@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using MusicOrganizer.presenter;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MusicOrganizer.view {
     /// <summary>
@@ -13,9 +14,11 @@ namespace MusicOrganizer.view {
             InitializeComponent();
             _presenter = new SongFoldersPresenter();
             LoadMusicFolders();
+            FoldersListView.SelectionChanged += EnableDisableRemoveButton;
         }
 
         private void LoadMusicFolders() {
+            RemoveButton.IsEnabled = false;
             FoldersListView.DataContext = _presenter.GetMusicFolders();
         }
 
@@ -40,6 +43,10 @@ namespace MusicOrganizer.view {
             var folder = (string)FoldersListView.SelectedItem;
             if (folder == null) return;
             _presenter.RemoveFolder(folder);
+        }
+
+        private void EnableDisableRemoveButton(object sender, SelectionChangedEventArgs e) {
+            RemoveButton.IsEnabled = FoldersListView.SelectedItem != null;
         }
     }
 }
