@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace MusicOrganizer.model
-{
-    public class Search
-    {
+namespace MusicOrganizer.model {
+    public class Search {
         public string Name { get; private set; }
         public HashSet<string> Genres { get; private set; }
         public HashSet<string> Tones { get; private set; }
@@ -15,8 +13,7 @@ namespace MusicOrganizer.model
         public HashSet<string> Cultures { get; private set; }
         public HashSet<string> Copyrights { get; private set; }
 
-        public Search()
-        {
+        public Search() {
             Genres = new();
             Tones = new();
             Paces = new();
@@ -26,8 +23,7 @@ namespace MusicOrganizer.model
             Copyrights = new();
         }
 
-        public void ClearFilters()
-        {
+        public void ClearFilters() {
             Name = "";
             Genres.Clear();
             Tones.Clear();

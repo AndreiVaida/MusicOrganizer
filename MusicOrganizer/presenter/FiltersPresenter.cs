@@ -5,14 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace MusicOrganizer.presenter
-{
-    public class FiltersPresenter
-    {
+namespace MusicOrganizer.presenter {
+    public class FiltersPresenter {
         private readonly ConfigRepository _configRepository;
 
-        public FiltersPresenter()
-        {
+        public FiltersPresenter() {
             _configRepository = ComponentProvider.ConfigRepository;
         }
 

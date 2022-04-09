@@ -14,25 +14,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MusicOrganizer.view
-{
+namespace MusicOrganizer.view {
     /// <summary>
     /// Interaction logic for SongsUserControl.xaml
     /// </summary>
-    public partial class SongsUserControl : UserControl
-    {
+    public partial class SongsUserControl : UserControl {
         private readonly SongsPresenter _presenter;
 
-        public SongsUserControl()
-        {
+        public SongsUserControl() {
             InitializeComponent();
             _presenter = new();
 
             LoadAllSongs();
         }
 
-        private void LoadAllSongs()
-        {
+        private void LoadAllSongs() {
             SongsGrid.DataContext = _presenter.GetSongs();
         }
     }

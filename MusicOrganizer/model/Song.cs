@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace MusicOrganizer.model
-{
-    public class Song
-    {
+namespace MusicOrganizer.model {
+    public class Song {
         public int Id { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
@@ -18,17 +16,15 @@ namespace MusicOrganizer.model
         public string Culture { get; set; }
         public string Copyright { get; set; }
 
-        public Song() {}
+        public Song() { }
 
-        public Song(int id, string name, string pathToFile)
-        {
+        public Song(int id, string name, string pathToFile) {
             Id = id;
             Name = name;
             FilePath = pathToFile;
         }
 
-        public Song(int id, string name, string pathToFile, string composer, List<string> genres, List<string> tones, string pace, int rating, bool starred, string voice, List<string> instruments, string culture, string copyright)
-        {
+        public Song(int id, string name, string pathToFile, string composer, List<string> genres, List<string> tones, string pace, int rating, bool starred, string voice, List<string> instruments, string culture, string copyright) {
             Id = id;
             Name = name;
             FilePath = pathToFile;

@@ -1,6 +1,4 @@
-﻿namespace MusicOrganizer.presenter
-{
-    public class MainWindowPresenter
-    {
+﻿namespace MusicOrganizer.presenter {
+    public class MainWindowPresenter {
     }
 }

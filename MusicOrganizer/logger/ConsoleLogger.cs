@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace MusicOrganizer.logger
-{
-    public class ConsoleLogger : ILogger
-    {
+namespace MusicOrganizer.logger {
+    public class ConsoleLogger : ILogger {
         public void Info(string text) => Log("INFO", text);
 
         public void Warning(string text) => Log("WARNING", text);

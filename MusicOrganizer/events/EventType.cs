@@ -1,7 +1,5 @@
-﻿namespace MusicOrganizer.events
-{
-    public enum EventType
-    {
+﻿namespace MusicOrganizer.events {
+    public enum EventType {
         Add,
         Remove
     }

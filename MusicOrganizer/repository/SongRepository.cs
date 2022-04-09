@@ -8,10 +8,8 @@ using System.IO;
 using System.Linq;
 using ATL;
 
-namespace MusicOrganizer.repository
-{
-    public class SongRepository
-    {
+namespace MusicOrganizer.repository {
+    public class SongRepository {
         private const string SONGS_TABLE = "songs";
         private const string ID_COLUMN = "id";
         private const string NAME_COLUMN = "name";
@@ -31,8 +29,7 @@ namespace MusicOrganizer.repository
         private readonly ILogger _logger;
         private readonly IEnumerable<string> _fileExtensions;
 
-        public SongRepository()
-        {
+        public SongRepository() {
             _database = ComponentProvider.DatabaseConnection;
             _logger = ComponentProvider.Logger;
             _fileExtensions = ComponentProvider.ConfigRepository.GetMusicExtensions();
@@ -44,18 +41,14 @@ namespace MusicOrganizer.repository
                         .Where(file => _fileExtensions.Any(extension => file.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase)))
                         .Select(file => new Track(file));
 
-        public List<Song> GetSongs(Search search)
-        {
+        public List<Song> GetSongs(Search search) {
             var songs = new List<Song>();
             var command = _database.CreateCommand();
             command.CommandText = $"SELECT * FROM {SONGS_TABLE}";
-            using (var reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
+            using (var reader = command.ExecuteReader()) {
+                while (reader.Read()) {
                     int id = -1;
-                    try
-                    {
+                    try {
                         id = Convert.ToInt32(reader.GetString(0));
                         var name = reader.GetString(1);
                         var path = reader.GetString(2);
@@ -71,8 +64,7 @@ namespace MusicOrganizer.repository
                         var copyright = reader.IsDBNull(12) ? null : reader.GetString(12);
                         songs.Add(new Song(id, name, path, composer, genres, tones, pace, rating, starred, voice, instruments, culture, copyright));
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         _logger.Error($"Cannot read song {id} from DB.", e);
                     }
                 }
@@ -80,16 +72,13 @@ namespace MusicOrganizer.repository
             return songs;
         }
 
-        public void AddOrUpdate(IEnumerable<Song> songs)
-        {
+        public void AddOrUpdate(IEnumerable<Song> songs) {
             var commandText = $"INSERT INTO {SONGS_TABLE}(" +
                         $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
                         $"VALUES($id, $name, $path, $composer, $genres, $tones, $pace, $rating, $starred, $voice, $instruments, $culture, $copyright)";
 
-            foreach (var song in songs)
-            {
-                try
-                {
+            foreach (var song in songs) {
+                try {
                     using var command = _database.CreateCommand();
                     command.CommandText = commandText;
                     command.Parameters.AddWithValue("$id", song.Id != 0 ? song.Id : DBNull.Value);
@@ -107,8 +96,7 @@ namespace MusicOrganizer.repository
                     command.Parameters.AddWithValue("$copyright", GetOrDBNull(song.Copyright));
                     command.ExecuteNonQuery();
                 }
-                catch (SqliteException e)
-                {
+                catch (SqliteException e) {
                     _logger.Error($"Cannot insert song {song} to DB.", e);
                 }
             }
@@ -116,10 +104,8 @@ namespace MusicOrganizer.repository
 
         private object GetOrDBNull(string text) => text != null ? text : DBNull.Value;
 
-        private void CreateTableIfNotExist()
-        {
-            try
-            {
+        private void CreateTableIfNotExist() {
+            try {
                 using var command = _database.CreateCommand();
                 command.CommandText = $"CREATE TABLE IF NOT EXISTS {SONGS_TABLE}(" +
                     $"{ID_COLUMN} INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -138,8 +124,7 @@ namespace MusicOrganizer.repository
 
                 command.ExecuteNonQuery();
             }
-            catch (SqliteException e)
-            {
+            catch (SqliteException e) {
                 _logger.Error($"Cannot create {SONGS_TABLE} table.", e);
             }
         }
