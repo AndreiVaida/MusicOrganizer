@@ -38,6 +38,7 @@ namespace MusicOrganizer.view {
 
         private void RemoveButton_Click(object sender, RoutedEventArgs e) {
             var folder = (string)FoldersListView.SelectedItem;
+            if (folder == null) return;
             _presenter.RemoveFolder(folder);
         }
     }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ATL;
+using System.Data;
 
 namespace MusicOrganizer.repository {
     public class SongRepository {
@@ -30,8 +31,10 @@ namespace MusicOrganizer.repository {
         private readonly IEnumerable<string> _fileExtensions;
 
         private readonly string InsertCommandText = $"INSERT INTO {SONGS_TABLE}(" +
-                        $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
-                        $"VALUES($id, $name, $path, $composer, $genres, $tones, $pace, $rating, $starred, $voice, $instruments, $culture, $copyright)";
+            $"{ID_COLUMN}, {NAME_COLUMN}, {PATH_COLUMN}, {COMPOSER_COLUMN}, {GENRES_COLUMN}, {TONES_COLUMN}, {PACE_COLUMN}, {RATING_COLUMN}, {STARRED_COLUMN}, {VOICE_COLUMN}, {INSTRUMENTS_COLUMN}, {CULTURE_COLUMN}, {COPYRIGHT_COLUMN}) " +
+            $"VALUES($id, $name, $path, $composer, $genres, $tones, $pace, $rating, $starred, $voice, $instruments, $culture, $copyright)";
+        private readonly string SelectByFolderCommandText = $"SELECT * FROM {SONGS_TABLE} WHERE {PATH_COLUMN} LIKE $folderPath";
+        private readonly string DeleteByFolderCommandText = $"DELETE FROM {SONGS_TABLE} WHERE {PATH_COLUMN} LIKE $folderPath";
 
         public SongRepository() {
             _database = ComponentProvider.DatabaseConnection;
@@ -45,35 +48,14 @@ namespace MusicOrganizer.repository {
                         .Where(file => _fileExtensions.Any(extension => file.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase)))
                         .Select(file => new Track(file));
 
-        public List<Song> GetSongs(Search search) {
-            var songs = new List<Song>();
+        public IEnumerable<Song> GetSongs(Search search) {
             var command = _database.CreateCommand();
             command.CommandText = $"SELECT * FROM {SONGS_TABLE}";
-            using (var reader = command.ExecuteReader()) {
-                while (reader.Read()) {
-                    int id = -1;
-                    try {
-                        id = Convert.ToInt32(reader.GetString(0));
-                        var name = reader.GetString(1);
-                        var path = reader.GetString(2);
-                        var composer = reader.IsDBNull(3) ? null : reader.GetString(3);
-                        var genres = reader.GetString(4).Split(LIST_SEPARATOR).ToList();
-                        var tones = reader.GetString(5).Split(LIST_SEPARATOR).ToList();
-                        var pace = reader.IsDBNull(6) ? null : reader.GetString(6);
-                        var rating = Convert.ToInt32(reader.GetString(7));
-                        var starred = Convert.ToBoolean(reader.GetString(8));
-                        var voice = reader.IsDBNull(9) ? null : reader.GetString(9);
-                        var instruments = reader.GetString(10).Split(LIST_SEPARATOR).ToList();
-                        var culture = reader.IsDBNull(11) ? null : reader.GetString(11);
-                        var copyright = reader.IsDBNull(12) ? null : reader.GetString(12);
-                        songs.Add(new Song(id, name, path, composer, genres, tones, pace, rating, starred, voice, instruments, culture, copyright));
-                    }
-                    catch (Exception e) {
-                        _logger.Error($"Cannot read song {id} from DB.", e);
-                    }
-                }
-            }
-            return songs;
+            using var reader = command.ExecuteReader();
+            return reader.Cast<IDataRecord>()
+                .Select(CastToSong)
+                .Where(song => song != null)
+                .ToList();
         }
 
         /// <summary>
@@ -87,9 +69,7 @@ namespace MusicOrganizer.repository {
             foreach (var song in songs) {
                 try {
                     Insert(song);
-                    if (song.Id == 0) {
-                        song.Id = GetLastInsertedRowId();
-                    }
+                    song.Id = GetLastInsertedRowId();
                     savedSongs.Add(song);
                 }
                 catch (SqliteException e) {
@@ -99,33 +79,88 @@ namespace MusicOrganizer.repository {
             return savedSongs;
         }
 
+        public IEnumerable<Song> GetByFolderPath(string folderPath) {
+            try {
+                using var command = _database.CreateCommand();
+                command.CommandText = SelectByFolderCommandText;
+                command.Parameters.AddWithValue("$folderPath", folderPath + '%');
+                using var reader = command.ExecuteReader();
+                return reader.Cast<IDataRecord>()
+                    .Select(CastToSong)
+                    .Where(song => song != null)
+                    .ToList();
+            }
+            catch (SqliteException e) {
+                _logger.Error($"Cannot load songs with folder {folderPath} from DB.", e);
+                return new List<Song>();
+            }
+        }
+
+        public int RemoveByFolder(string folderPath) {
+            try {
+                using var command = _database.CreateCommand();
+                command.CommandText = DeleteByFolderCommandText;
+                command.Parameters.AddWithValue("$folderPath", folderPath + '%');
+                var numberOfSongsDeleted = command.ExecuteNonQuery();
+                return numberOfSongsDeleted;
+            }
+            catch (SqliteException e) {
+                _logger.Error($"Cannot delete songs with folder {folderPath} from DB.", e);
+                return 0;
+            }
+        }
+
         private void Insert(Song song) {
             using var command = _database.CreateCommand();
             command.CommandText = InsertCommandText;
             command.Parameters.AddWithValue("$id", song.Id != 0 ? song.Id : DBNull.Value);
             command.Parameters.AddWithValue("name", song.Name);
             command.Parameters.AddWithValue("$path", song.FilePath);
-            command.Parameters.AddWithValue("$composer", GetOrDBNull(song.Composer));
+            command.Parameters.AddWithValue("$composer", song.Composer ?? string.Empty);
             command.Parameters.AddWithValue("$genres", string.Join(LIST_SEPARATOR, song.Genres ?? new List<string>()));
             command.Parameters.AddWithValue("$tones", string.Join(LIST_SEPARATOR, song.Tones ?? new List<string>()));
-            command.Parameters.AddWithValue("$pace", GetOrDBNull(song.Pace));
+            command.Parameters.AddWithValue("$pace", song.Pace ?? string.Empty);
             command.Parameters.AddWithValue("$rating", song.Rating);
             command.Parameters.AddWithValue("$starred", song.Starred.ToString());
-            command.Parameters.AddWithValue("$voice", GetOrDBNull(song.Voice));
+            command.Parameters.AddWithValue("$voice", song.Voice ?? string.Empty);
             command.Parameters.AddWithValue("$instruments", string.Join(LIST_SEPARATOR, song.Instruments ?? new List<string>()));
-            command.Parameters.AddWithValue("$culture", GetOrDBNull(song.Culture));
-            command.Parameters.AddWithValue("$copyright", GetOrDBNull(song.Copyright));
+            command.Parameters.AddWithValue("$culture", song.Culture ?? string.Empty);
+            command.Parameters.AddWithValue("$copyright", song.Copyright ?? string.Empty);
             command.ExecuteNonQuery();
         }
 
-        private int GetLastInsertedRowId() {
+        private long GetLastInsertedRowId() {
             using var command = _database.CreateCommand();
             command.CommandText = "select last_insert_rowid()";
             Int64 LastRowID64 = (Int64)command.ExecuteScalar();
-            return (int)LastRowID64;
+            return LastRowID64;
         }
 
-        private object GetOrDBNull(string text) => text != null ? text : DBNull.Value;
+        private Song CastToSong(IDataRecord record) {
+            long id = 0;
+            try {
+                id = (long)record[ID_COLUMN];
+                return new() {
+                    Id = id,
+                    Name = (string)record[NAME_COLUMN],
+                    FilePath = (string)record[PATH_COLUMN],
+                    Composer = (string)record[COMPOSER_COLUMN],
+                    Genres = ((string)record[COMPOSER_COLUMN]).Split(LIST_SEPARATOR).ToList(),
+                    Tones = ((string)record[TONES_COLUMN]).Split(LIST_SEPARATOR).ToList(),
+                    Pace = (string)record[PACE_COLUMN],
+                    Rating = (int)(long)record[RATING_COLUMN],
+                    Starred = Convert.ToBoolean((string)record[STARRED_COLUMN]),
+                    Voice = (string)record[VOICE_COLUMN],
+                    Instruments = ((string)record[INSTRUMENTS_COLUMN]).Split(LIST_SEPARATOR).ToList(),
+                    Culture = (string)record[CULTURE_COLUMN],
+                    Copyright = (string)record[COPYRIGHT_COLUMN]
+                };
+            }
+            catch (Exception e) {
+                _logger.Error($"Cannot read song {id} from DB.", e);
+                return null;
+            }
+        }
 
         private void CreateTableIfNotExist() {
             try {

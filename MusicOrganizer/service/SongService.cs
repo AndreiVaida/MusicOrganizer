@@ -9,17 +9,20 @@ using System.Reactive.Subjects;
 using ATL;
 using System;
 using MusicOrganizer.events;
+using System.Reactive.Linq;
 
 namespace MusicOrganizer.service {
     public class SongService {
         private readonly ILogger _logger;
         private readonly SongRepository _songRepository;
-        public readonly Subject<SongEvent> SongUpdates;
+        private readonly Subject<SongEvent> _songUpdates;
+        public readonly IObservable<SongEvent> SongUpdates;
 
         public SongService(SongRepository songRepository, IObservable<FolderEvent> songFolderUpdates) {
             _logger = ComponentProvider.Logger;
             _songRepository = songRepository;
-            SongUpdates = new();
+            _songUpdates = new();
+            SongUpdates = _songUpdates.AsObservable();
             songFolderUpdates.Subscribe(OnNextFolderUpdate, OnErrorFolderUpdate);
         }
 
@@ -39,7 +42,7 @@ namespace MusicOrganizer.service {
                 _logger.Info($"Loaded {songs.Count()} songs from {rootFolderPath}.");
                 songs = _songRepository.Add(songs);
 
-                SongUpdates.OnNext(new(songs, EventType.Add));
+                _songUpdates.OnNext(new(songs, EventType.Add));
                 // SaveIdOfNewSongsToDisk(songs);
             }
             catch (IOException e) {
@@ -48,9 +51,9 @@ namespace MusicOrganizer.service {
         }
 
         private Song ConvertToSong(Track track) {
-            int id = 0;
+            long id = 0;
             if (track.AdditionalFields.TryGetValue(nameof(Song.Id), out var currentId)) {
-                id = Convert.ToInt32(currentId);
+                id = Convert.ToInt64(currentId);
             }
             var filePath = track.Path;
             var name = !string.IsNullOrWhiteSpace(track.Title)
@@ -60,7 +63,11 @@ namespace MusicOrganizer.service {
         }
 
         private void RemoveSongs(string folderPath) {
-            // todo
+            folderPath += Path.DirectorySeparatorChar;
+            var removedSongs = _songRepository.GetByFolderPath(folderPath);
+            var numberOfSongsDeleted = _songRepository.RemoveByFolder(folderPath);
+            _logger.Info($"{numberOfSongsDeleted} songs deleted with folder {folderPath}.");
+            _songUpdates.OnNext(new(removedSongs, EventType.Remove));
         }
 
         //private void SaveIdToNewFiles(IEnumerable<Track> songs)

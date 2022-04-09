@@ -2,7 +2,7 @@
 
 namespace MusicOrganizer.model {
     public class Song {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
         public string Composer { get; set; }
@@ -18,13 +18,13 @@ namespace MusicOrganizer.model {
 
         public Song() { }
 
-        public Song(int id, string name, string pathToFile) {
+        public Song(long id, string name, string pathToFile) {
             Id = id;
             Name = name;
             FilePath = pathToFile;
         }
 
-        public Song(int id, string name, string pathToFile, string composer, List<string> genres, List<string> tones, string pace, int rating, bool starred, string voice, List<string> instruments, string culture, string copyright) {
+        public Song(long id, string name, string pathToFile, string composer, List<string> genres, List<string> tones, string pace, int rating, bool starred, string voice, List<string> instruments, string culture, string copyright) {
             Id = id;
             Name = name;
             FilePath = pathToFile;
@@ -39,5 +39,16 @@ namespace MusicOrganizer.model {
             Culture = culture;
             Copyright = copyright;
         }
+
+        public override bool Equals(object obj) {
+            if (obj == null || GetType() != obj.GetType()) {
+                return false;
+            }
+            var song = (Song)obj;
+            return Id != 0 && song.Id != 0
+                ? Id == song.Id
+                : FilePath.Equals(song.FilePath);
+        }
+        public override int GetHashCode() => Id != 0 ? Id.GetHashCode() : FilePath.GetHashCode();
     }
 }

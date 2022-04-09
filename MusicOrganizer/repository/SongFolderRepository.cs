@@ -64,7 +64,6 @@ namespace MusicOrganizer.repository {
             try {
                 using var command = _database.CreateCommand();
                 command.CommandText = $"CREATE TABLE IF NOT EXISTS {FOLDERS_TABLE}({NAME_COLUMN} TEXT PRIMARY KEY)";
-
                 command.ExecuteNonQuery();
             }
             catch (SqliteException e) {
