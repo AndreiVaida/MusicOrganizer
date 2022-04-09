@@ -34,8 +34,8 @@ namespace MusicOrganizer.configuration {
             SongFolderRepository = new SongFolderRepositoryImpl();
             SongDiskRepository = new SongDiskRepositoryImpl();
             SongDatabaseRepository = new SongDatabaseRepositoryImpl();
-            SongFolderService = new(SongFolderRepository);
-            SongService = new(SongDiskRepository, SongDatabaseRepository, SongFolderService.SongFolderUpdates);
+            SongFolderService = new SongFolderServiceImpl(SongFolderRepository);
+            SongService = new SongServiceImpl(SongDiskRepository, SongDatabaseRepository, SongFolderService.SongFolderUpdates);
         }
     }
 }
