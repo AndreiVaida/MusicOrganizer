@@ -17,7 +17,7 @@ namespace MusicOrganizer
     {
         private readonly ILogger _logger = ComponentProvider.Logger;
         private SongService _songService = ComponentProvider.SongService;
-        private SongsFoldersRepository _songsFoldersRepository = ComponentProvider.SongsFoldersRepository;
+        private SongFolderRepository _songsFoldersRepository = ComponentProvider.SongFolderRepository;
         private SongsFoldersWindow _manageFoldersWindow { get; set; }
 
         public MainWindow()

@@ -13,10 +13,11 @@ namespace MusicOrganizer.configuration
 
         public static readonly ILogger Logger;
         public static readonly ConfigRepository ConfigRepository;
+        public static readonly SongFolderRepository SongFolderRepository;
         public static readonly SongRepository SongRepository;
+        public static readonly SongFolderService SongFolderService;
         public static readonly SongService SongService;
-        public static readonly SongsFoldersRepository SongsFoldersRepository;
-
+        
         public static SqliteConnection DatabaseConnection
         {
             get
@@ -35,9 +36,10 @@ namespace MusicOrganizer.configuration
         {
             Logger = new ConsoleLogger();
             ConfigRepository = new(XmlFilePath);
+            SongFolderRepository = new();
             SongRepository = new();
             SongService = new(SongRepository);
-            SongsFoldersRepository = new();
+            SongFolderService = new(SongFolderRepository);
         }
     }
 }

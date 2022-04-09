@@ -5,14 +5,17 @@ using System.Collections.Generic;
 
 namespace MusicOrganizer.repository
 {
-    public class SongsFoldersRepository
+    /// <summary>
+    /// Repository for storing folder paths in which songs are located.
+    /// </summary>
+    public class SongFolderRepository
     {
         private const string FOLDERS_TABLE = "folders";
         private const string NAME_COLUMN = "name";
         private readonly SqliteConnection _database;
         private readonly ILogger _logger;
 
-        public SongsFoldersRepository()
+        public SongFolderRepository()
         {
             _database = ComponentProvider.DatabaseConnection;
             _logger = ComponentProvider.Logger;

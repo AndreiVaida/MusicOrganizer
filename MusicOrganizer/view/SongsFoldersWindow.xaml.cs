@@ -9,12 +9,12 @@ namespace MusicOrganizer.view
     /// </summary>
     public partial class SongsFoldersWindow : Window
     {
-        private readonly SongsFoldersPresenter _presenter;
+        private readonly SongFoldersPresenter _presenter;
 
         public SongsFoldersWindow()
         {
             InitializeComponent();
-            _presenter = new SongsFoldersPresenter();
+            _presenter = new SongFoldersPresenter();
             LoadMusicFolders();
         }
 
