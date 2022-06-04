@@ -6,7 +6,7 @@ namespace MusicOrganizer.service {
     public interface SongFolderService {
         public IObservable<FolderEvent> SongFolderUpdates { get; }
         public IEnumerable<string> GetAll();
-        public bool AddFromFolder(string folderPath);
-        public bool RemoveFromFolder(string folderPath);
+        public bool Add(string folderPath);
+        public bool Remove(string folderPath);
     }
 }

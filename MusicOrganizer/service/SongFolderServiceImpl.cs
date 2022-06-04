@@ -17,7 +17,7 @@ namespace MusicOrganizer.service {
 
         public IEnumerable<string> GetAll() => _repository.GetAll();
 
-        public bool AddFromFolder(string folderPath) {
+        public bool Add(string folderPath) {
             var added = _repository.Add(folderPath);
             if (added) {
                 _songFolderUpdates.OnNext(new(folderPath, EventType.Add));
@@ -25,7 +25,7 @@ namespace MusicOrganizer.service {
             return added;
         }
 
-        public bool RemoveFromFolder(string folderPath) {
+        public bool Remove(string folderPath) {
             var removed = _repository.Remove(folderPath);
             if (removed) {
                 _songFolderUpdates.OnNext(new(folderPath, EventType.Remove));

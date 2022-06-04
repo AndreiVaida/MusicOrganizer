@@ -22,12 +22,12 @@ namespace MusicOrganizer.presenter {
 
         public void AddFolder(string folder) {
             if (_folders.Contains(folder)) return;
-            if (_songFolderService.AddFromFolder(folder))
+            if (_songFolderService.Add(folder))
                 _folders.Add(folder);
         }
 
         public void RemoveFolder(string folder) {
-            if (_songFolderService.RemoveFromFolder(folder))
+            if (_songFolderService.Remove(folder))
                 _folders.Remove(folder);
         }
     }
